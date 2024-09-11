@@ -63,4 +63,5 @@ def shortcut(name):
     return student.get_current_class()
 
 
-app.run()
+if __name__ == '__main__':
+    app.run()
