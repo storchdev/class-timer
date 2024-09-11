@@ -24,18 +24,18 @@ app = Flask(__name__)
 @app.route('/<name>')
 def shortcut(name):
     if request.headers.get('key') != KEY:
-        return 'Invalid key', 403
+        return 'Invalid key;', 403
 
     try:
         student = parse_student(name)
     except StudentNotFound:
-        return 'Student not found', 404
+        return 'Student not found;', 404
 
     if student.is_on_weekend():
-        return 'No School!\nEnjoy your weekend!'
+        return 'No School!;Enjoy your weekend!'
     
     if student.is_on_holiday():
-        return f'{student.get_holiday_label()}\nNo School!'
+        return f'{student.get_holiday_label()};No School!'
 
     current_class = student.get_current_class()
     next_class = student.get_next_class()
