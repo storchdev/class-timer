@@ -24,7 +24,7 @@ app = Flask(__name__)
 @app.route('/<name>')
 def shortcut(name):
     if request.headers.get('key') != KEY:
-        'Invalid key', 403
+        return 'Invalid key', 403
 
     try:
         student = parse_student(name)
