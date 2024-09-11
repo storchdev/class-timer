@@ -51,13 +51,13 @@ class Student:
         return (f"Student(name='{self.name}', school={self.school}, "
                 f"weekdays={self.weekdays}, special_days={self.special_days})")
 
-    def _timezonify(self, dt: Optional[datetime] = None):
+    def _timezonify(self, dt: Optional[datetime] = None) -> datetime:
         if dt is None:
             return datetime.now(self.timezone)
         else:
             return dt.astimezone(self.timezone)
 
-    def _get_day(self, dt):
+    def _get_day(self, dt) -> Day:
         if self.is_on_weekend(dt):
             raise WeekendError("no class on weekends")
         
@@ -92,8 +92,8 @@ class Student:
         current_class = self.get_current_class(dt)
         if current_class is None:
             return None
-        
-        return (current_class.end - dt.time()).total_seconds()
+
+        return (datetime.combine(dt, current_class.end.time(), self.timezone) - dt).total_seconds()
 
     def get_time_until_next_class(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
@@ -101,7 +101,7 @@ class Student:
         if next_class is None:
             return None
         
-        return (next_class.start - dt.time()).total_seconds()
+        return (datetime.combine(dt, next_class.start.time(), self.timezone) - dt).total_seconds()
 
     def get_time_left_in_break(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
@@ -109,7 +109,7 @@ class Student:
             return None 
         
         next_class = self.get_next_class(dt)
-        return (next_class.start - dt.time()).total_seconds()
+        return (datetime.combine(dt, next_class.start.time(), self.timezone) - dt).total_seconds()
 
     def is_on_holiday(self, dt: Optional[datetime] = None):
         day = self._get_day(self._timezonify(dt))

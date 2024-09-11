@@ -4,6 +4,7 @@ from config import KEY
 
 
 def humanize_time(seconds):
+    seconds = int(seconds)
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     seconds = seconds % 60
