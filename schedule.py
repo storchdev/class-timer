@@ -1,11 +1,7 @@
 import re 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import List, Dict, Optional, Tuple
 from zoneinfo import ZoneInfo
-
-
-class WeekendError(Exception):
-    pass
 
 class StudentNotFound(Exception):
     pass
@@ -13,9 +9,12 @@ class StudentNotFound(Exception):
 class SchoolNotFound(Exception):
     pass
 
+class DayNotFound(Exception):
+    pass
+
 
 class Class:
-    def __init__(self, name: str, start: datetime, end: datetime):
+    def __init__(self, name: str, start: time, end: time):
         self.name = name
         self.start = start
         self.end = end
@@ -30,9 +29,6 @@ class Day:
         self.monthday = monthday
         self.classes: List[Class] = []
         self.label: str = None
-
-    def is_special(self):
-        return self.monthday is not None
 
     def __repr__(self):
         return (f"Day(weekday={self.weekday}, monthday={self.monthday}, "
@@ -57,20 +53,20 @@ class Student:
         else:
             return dt.astimezone(self.timezone)
 
-    def _get_day(self, dt) -> Day:
-        if self.is_on_weekend(dt):
-            raise WeekendError("no class on weekends")
-        
+    def _get_day(self, dt) -> Optional[Day]:
         special_day = self.special_days.get((dt.month, dt.day))
         if special_day:
             return special_day 
         else:
+            if dt.weekday() not in self.weekdays:
+                return None
+
             return self.weekdays[dt.weekday()]
     
     def get_current_class(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
         for classs in self._get_day(dt).classes:
-            if classs.start.time() < dt.time() < classs.end.time():
+            if classs.start < dt.time() < classs.end:
                 return classs
         
         return None 
@@ -79,10 +75,15 @@ class Student:
         dt = self._timezonify(dt)
         classes = self._get_day(dt).classes
         for classs in classes:
-            if classs.start.time() > dt.time():
+            if classs.start > dt.time():
                 return classs
         
         return None 
+    
+    def is_before_school(self, dt: Optional[datetime] = None) -> bool:
+        dt = self._timezonify(dt)
+        classes = self._get_day(dt).classes 
+        return dt.time() < classes[0].start
 
     def is_in_break(self, dt: Optional[datetime] = None):
         return self.get_current_class(dt) is None and self.get_next_class(dt) is not None 
@@ -93,7 +94,7 @@ class Student:
         if current_class is None:
             return None
 
-        return (datetime.combine(dt, current_class.end.time(), self.timezone) - dt).total_seconds()
+        return (datetime.combine(dt, current_class.end, self.timezone) - dt).total_seconds()
 
     def get_time_until_next_class(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
@@ -101,7 +102,7 @@ class Student:
         if next_class is None:
             return None
         
-        return (datetime.combine(dt, next_class.start.time(), self.timezone) - dt).total_seconds()
+        return (datetime.combine(dt, next_class.start, self.timezone) - dt).total_seconds()
 
     def get_time_left_in_break(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
@@ -109,21 +110,21 @@ class Student:
             return None 
         
         next_class = self.get_next_class(dt)
-        return (datetime.combine(dt, next_class.start.time(), self.timezone) - dt).total_seconds()
+        return (datetime.combine(dt, next_class.start, self.timezone) - dt).total_seconds()
 
-    def is_on_holiday(self, dt: Optional[datetime] = None):
+    def has_no_school(self, dt: Optional[datetime] = None):
         day = self._get_day(self._timezonify(dt))
-        return day.is_special() and len(day.classes) == 0
+        return len(day.classes) == 0
 
-    def get_holiday_label(self, dt: Optional[datetime] = None):
-        if not self.is_holiday(dt):
+    def get_no_school_label(self, dt: Optional[datetime] = None):
+        if not self.has_no_school(dt):
             return None 
         return self._get_day(self._timezonify(dt)).label
     
     def is_on_weekend(self, dt: Optional[datetime] = None):
-        dt = self._timezonify(dt) 
+        dt = self._timezonify(dt)
         return dt.weekday() in (5, 6)
-
+    
 
 class School:
     def __init__(self, name: str):
@@ -255,7 +256,9 @@ def parse_student(student_name: str, filename='students.schedule'):
                         'tuesday': 1,
                         'wednesday': 2,
                         'thursday': 3,
-                        'friday': 4
+                        'friday': 4,
+                        'saturday': 5,
+                        'sunday': 6
                     }
 
                     weekday = table[day_name]
@@ -294,18 +297,17 @@ def parse_student(student_name: str, filename='students.schedule'):
 
                 # Full day event
                 if '@' not in line:
-                    if current_day.is_special():
-                        current_day.label = line
+                    current_day.label = line
                     continue 
                 
                 name, period = re.split(r'\s*@\s*', line)
                 name = unvar(name)
 
                 def parse_time(time_str):
-                    dt = datetime.strptime(time_str, '%H:%M')
-                    if 1 <= dt.hour <= 6:
-                        dt = dt.replace(hour=dt.hour + 12)
-                    return dt
+                    t = datetime.strptime(time_str, '%H:%M').time()
+                    if 1 <= t.hour <= 6:
+                        t = t.replace(hour=t.hour + 12)
+                    return t
 
                 def parse_period(period_str):
                     start, end = re.split(r'\s*-\s*', period_str)
