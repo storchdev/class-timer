@@ -62,7 +62,7 @@ def shortcut(name):
     
     elif current_class is not None and next_class is None:
         seconds = student.get_time_left_in_class(dt)
-        return f'{current_class} ends in {humanize_time(seconds)};No more classes today'
+        return f'{current_class.name} ends in {humanize_time(seconds)};No more classes today'
 
     elif current_class is None and next_class is None:
         return 'No more classes today!;'
