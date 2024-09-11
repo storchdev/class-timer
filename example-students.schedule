@@ -1,0 +1,92 @@
+# Example student schedules
+
+alice:
+    # Alice's schedule includes standard and special day overrides
+    school = green-valley
+
+    # Class assignments
+    a = Math 101
+    b = History 201
+    c = Chemistry 301
+    d = Physical Education
+    e = Art Class
+    f = Music Class
+    g = Computer Science
+    h = Study Hall
+
+    # Period times (in non-military and military time formats)
+    period-1 = 7:30-8:30
+    period-2 = 8:35-9:35
+    period-3 = 9:40-10:40
+    lunch-1 = 10:45-11:15
+    period-4 = 11:20-12:20
+    period-5 = 12:25-1:25
+    period-6 = 1:30-2:30
+
+    # Daily schedules
+    monday:
+        a @ 7:30-8:30
+        b @ period-2
+        c @ period-3
+        Lunch @ lunch-1
+        d @ period-4
+        e @ period-5
+        f @ period-6
+
+    tuesday:
+        b @ period-1
+        a @ period-2
+        g @ period-3
+        Lunch @ lunch-1
+        h @ period-4
+        e @ period-5
+        f @ period-6
+
+    wednesday:
+        c @ 7:30-8:30
+        d @ period-2
+        Lunch @ 10:30-11:00
+        g @ period-4 + period-5
+
+    9/15: 
+        # Override for a specific day
+        a @ 9:00-10:00
+        b @ 10:05-11:05
+        Lunch @ 11:10-11:40
+        d @ 11:45-12:45
+
+    11/1:
+        # One-lines with no @ are considered holidays
+        Family Trip
+
+bob:
+    # Bob's schedule includes periods with combined lunch breaks and early dismissal
+    school = green-valley
+
+    a = Biology
+    b = Geometry
+    c = Economics
+    d = Music Theory
+    e = Art
+    f = Computer Science
+
+    period-1 = 8:00-9:00
+    period-2 = 9:05-10:05
+    period-3 = 10:10-11:10
+    lunch-1 = 11:15-11:45
+    lunch-2 = 11:50-12:20
+    period-4 = 12:25-1:25
+    period-5 = 1:30-2:30
+
+    monday:
+        b @ period-1
+        a @ period-2
+        c @ period-3
+        Lunch @ lunch-1 + lunch-2
+        d @ period-4
+
+    friday:
+        e @ period-1
+        f @ period-2
+        Lunch @ lunch-1
+        c @ lunch-2 + period-4
