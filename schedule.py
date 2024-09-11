@@ -4,6 +4,16 @@ from typing import List, Dict, Optional, Tuple
 from zoneinfo import ZoneInfo
 
 
+class WeekendError(Exception):
+    pass
+
+class StudentNotFound(Exception):
+    pass
+
+class SchoolNotFound(Exception):
+    pass
+
+
 class Class:
     def __init__(self, name: str, start: datetime, end: datetime):
         self.name = name
@@ -49,7 +59,7 @@ class Student:
 
     def _get_day(self, dt):
         if self.is_on_weekend(dt):
-            raise Exception("no class on weekends")
+            raise WeekendError("no class on weekends")
         
         special_day = self.special_days.get((dt.month, dt.day))
         if special_day:
@@ -77,7 +87,31 @@ class Student:
     def is_in_break(self, dt: Optional[datetime] = None):
         return self.get_current_class(dt) is None and self.get_next_class(dt) is not None 
 
-    def is_holiday(self, dt: Optional[datetime] = None):
+    def get_time_left_in_class(self, dt: Optional[datetime] = None):
+        dt = self._timezonify(dt)
+        current_class = self.get_current_class(dt)
+        if current_class is None:
+            return None
+        
+        return (current_class.end - dt.time()).total_seconds()
+
+    def get_time_until_next_class(self, dt: Optional[datetime] = None):
+        dt = self._timezonify(dt)
+        next_class = self.get_next_class(dt)
+        if next_class is None:
+            return None
+        
+        return (next_class.start - dt.time()).total_seconds()
+
+    def get_time_left_in_break(self, dt: Optional[datetime] = None):
+        dt = self._timezonify(dt)
+        if not self.is_in_break(dt):
+            return None 
+        
+        next_class = self.get_next_class(dt)
+        return (next_class.start - dt.time()).total_seconds()
+
+    def is_on_holiday(self, dt: Optional[datetime] = None):
         day = self._get_day(self._timezonify(dt))
         return day.is_special() and len(day.classes) == 0
 
@@ -109,7 +143,7 @@ def parse_day(day_str: str):
     return parsed_date 
 
 
-def parse_school(school_name, filename='schools.txt') -> School: # -> Dict[str, Dict[str, datetime]]:
+def parse_school(school_name, filename='schools.schedule') -> School: # -> Dict[str, Dict[str, datetime]]:
     school = School(school_name)
 
     with open(filename) as f:
@@ -118,7 +152,7 @@ def parse_school(school_name, filename='schools.txt') -> School: # -> Dict[str, 
             if line.rstrip() == school_name + ':':
                 break 
         else:
-            raise ValueError(f'school "{school_name}" not found')
+            raise SchoolNotFound(f'school "{school_name}" not found')
 
         for n in range(n+1, len(lines)):
             line = lines[n]
@@ -168,7 +202,7 @@ def parse_school(school_name, filename='schools.txt') -> School: # -> Dict[str, 
     return school 
 
 
-def parse_student(student_name: str, filename='students.txt'):
+def parse_student(student_name: str, filename='students.schedule'):
     student = Student(student_name)
     student_vars = {}
 
@@ -183,7 +217,7 @@ def parse_student(student_name: str, filename='students.txt'):
             if line.rstrip() == student_name+':':
                 break 
         else:
-            raise ValueError(f'student "{student_name}" not found')
+            raise StudentNotFound(f'student "{student_name}" not found')
 
         current_day = None  
         for n in range(n+1, len(lines)):
@@ -234,8 +268,11 @@ def parse_student(student_name: str, filename='students.txt'):
                 if re.match(r'\d\d?/\d\d?:', line):
                     dt = parse_day(line.removesuffix(':'))
                     monthday = (dt.month, dt.day)
-                    current_day = Day(dt.weekday(), monthday)
-                    student.special_days[monthday] = current_day
+
+                    if monthday not in student.special_days:
+                        current_day = Day(dt.weekday(), monthday)
+                        student.special_days[monthday] = current_day
+
                     continue
 
                 if line.startswith('school:'):
@@ -247,7 +284,7 @@ def parse_student(student_name: str, filename='students.txt'):
                     student.school = school
 
                     # fetch special days from school but don't override
-                    for monthday, day in student.school.special_days:
+                    for monthday, day in student.school.special_days.items():
                         if monthday not in student.special_days:
                             student.special_days[monthday] = day
 
@@ -290,25 +327,3 @@ def parse_student(student_name: str, filename='students.txt'):
                 current_day.classes.append(Class(name, start, end))
         
     return student
-
-
-
-
-
-
-
-
-                
-                
-
-
-
-                
-                    
-
-
-
-                
-                
-
-
