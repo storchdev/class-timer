@@ -50,7 +50,7 @@ def shortcut(name):
 
     if student.is_before_school(dt):
         seconds = student.get_time_until_next_class(dt)
-        return f'First class starts in {humanize_time(seconds)};{next_class.name}'
+        return f'{next_class.name} starts in {humanize_time(seconds)};Have a good day!'
 
     if student.is_in_break(dt):
         seconds = student.get_time_left_in_break(dt)
@@ -58,11 +58,11 @@ def shortcut(name):
 
     if current_class is not None and next_class is not None:
         seconds = student.get_time_left_in_class(dt)
-        return f'Class ends in {humanize_time(seconds)};Next class is {next_class.name}'
+        return f'{current_class.name} ends in {humanize_time(seconds)};Next class is {next_class.name}'
     
     elif current_class is not None and next_class is None:
         seconds = student.get_time_left_in_class(dt)
-        return f'Class ends in {humanize_time(seconds)};No more classes today'
+        return f'{current_class} ends in {humanize_time(seconds)};No more classes today'
 
     elif current_class is None and next_class is None:
         return 'No more classes today!;'
