@@ -63,7 +63,7 @@ class Student:
 
             return self.weekdays[dt.weekday()]
     
-    def get_current_class(self, dt: Optional[datetime] = None):
+    def get_current_class(self, dt: Optional[datetime] = None) -> Optional[Class]:
         dt = self._timezonify(dt)
         for classs in self._get_day(dt).classes:
             if classs.start < dt.time() < classs.end:
@@ -71,7 +71,7 @@ class Student:
         
         return None 
     
-    def get_next_class(self, dt: Optional[datetime] = None):
+    def get_next_class(self, dt: Optional[datetime] = None) -> Optional[Class]:
         dt = self._timezonify(dt)
         classes = self._get_day(dt).classes
         for classs in classes:
@@ -85,10 +85,10 @@ class Student:
         classes = self._get_day(dt).classes 
         return dt.time() < classes[0].start
 
-    def is_in_break(self, dt: Optional[datetime] = None):
+    def is_in_break(self, dt: Optional[datetime] = None) -> bool:
         return self.get_current_class(dt) is None and self.get_next_class(dt) is not None 
 
-    def get_time_elapsed_in_class(self, dt: Optional[datetime] = None):
+    def get_time_elapsed_in_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
         current_class = self.get_current_class(dt)
         if current_class is None:
@@ -96,7 +96,7 @@ class Student:
         
         return (dt - datetime.combine(dt, current_class.start, self.timezone)).total_seconds()
 
-    def get_time_left_in_class(self, dt: Optional[datetime] = None):
+    def get_time_left_in_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
         current_class = self.get_current_class(dt)
         if current_class is None:
@@ -104,7 +104,7 @@ class Student:
 
         return (datetime.combine(dt, current_class.end, self.timezone) - dt).total_seconds()
 
-    def get_time_until_next_class(self, dt: Optional[datetime] = None):
+    def get_time_until_next_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
         next_class = self.get_next_class(dt)
         if next_class is None:
@@ -112,7 +112,7 @@ class Student:
         
         return (datetime.combine(dt, next_class.start, self.timezone) - dt).total_seconds()
 
-    def get_time_left_in_break(self, dt: Optional[datetime] = None):
+    def get_time_left_in_break(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
         if not self.is_in_break(dt):
             return None 
@@ -120,16 +120,16 @@ class Student:
         next_class = self.get_next_class(dt)
         return (datetime.combine(dt, next_class.start, self.timezone) - dt).total_seconds()
 
-    def has_no_school(self, dt: Optional[datetime] = None):
+    def has_no_school(self, dt: Optional[datetime] = None) -> bool:
         day = self._get_day(self._timezonify(dt))
         return len(day.classes) == 0
 
-    def get_no_school_label(self, dt: Optional[datetime] = None):
+    def get_no_school_label(self, dt: Optional[datetime] = None) -> Optional[str]:
         if not self.has_no_school(dt):
             return None 
         return self._get_day(self._timezonify(dt)).label
     
-    def is_on_weekend(self, dt: Optional[datetime] = None):
+    def is_on_weekend(self, dt: Optional[datetime] = None) -> bool:
         dt = self._timezonify(dt)
         return dt.weekday() in (5, 6)
     
@@ -143,7 +143,7 @@ class School:
         return f"School(name='{self.name}', special_days={self.special_days})"
 
 
-def parse_day(day_str: str):
+def parse_day(day_str: str) -> datetime:
     parsed_date = datetime.strptime(day_str, '%m/%d')
     parsed_date = parsed_date.replace(year=datetime.now().year)
     today = datetime.now()
@@ -211,7 +211,7 @@ def parse_school(school_name, filename='schools.schedule') -> School: # -> Dict[
     return school 
 
 
-def parse_student(student_name: str, filename='students.schedule'):
+def parse_student(student_name: str, filename='students.schedule') -> Student:
     student = Student(student_name)
     student_vars = {}
 
