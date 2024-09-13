@@ -94,6 +94,16 @@ class Student:
                 and current_class is None
                 and next_class is not None)
 
+    def get_class_end(self, dt: Optional[datetime] = None) -> datetime:
+        dt = self._timezonify(dt)
+        current_class = self.get_current_class(dt)
+        return datetime.combine(dt, current_class.end, self.timezone)
+    
+    def get_class_start(self, dt: Optional[datetime] = None) -> datetime:
+        dt = self._timezonify(dt)
+        current_class = self.get_current_class(dt)
+        return datetime.combine(dt, current_class.start, self.timezone)
+
     def get_time_elapsed_in_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
         current_class = self.get_current_class(dt)
@@ -128,7 +138,7 @@ class Student:
 
     def has_no_school(self, dt: Optional[datetime] = None) -> bool:
         day = self._get_day(self._timezonify(dt))
-        return len(day.classes) == 0
+        return day is None or len(day.classes) == 0
 
     def get_no_school_label(self, dt: Optional[datetime] = None) -> Optional[str]:
         if not self.has_no_school(dt):
