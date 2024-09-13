@@ -88,6 +88,14 @@ class Student:
     def is_in_break(self, dt: Optional[datetime] = None):
         return self.get_current_class(dt) is None and self.get_next_class(dt) is not None 
 
+    def get_time_elapsed_in_class(self, dt: Optional[datetime] = None):
+        dt = self._timezonify(dt)
+        current_class = self.get_current_class(dt)
+        if current_class is None:
+            return None 
+        
+        return (dt - datetime.combine(dt, current_class.start, self.timezone)).total_seconds()
+
     def get_time_left_in_class(self, dt: Optional[datetime] = None):
         dt = self._timezonify(dt)
         current_class = self.get_current_class(dt)
