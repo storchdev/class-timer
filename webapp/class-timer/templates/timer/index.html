@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('timer.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
