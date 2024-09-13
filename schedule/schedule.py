@@ -86,7 +86,13 @@ class Student:
         return dt.time() < classes[0].start
 
     def is_in_break(self, dt: Optional[datetime] = None) -> bool:
-        return self.get_current_class(dt) is None and self.get_next_class(dt) is not None 
+        current_class = self.get_current_class(dt)
+        next_class = self.get_next_class(dt)
+        is_before_school = self.is_before_school(dt)
+
+        return (not is_before_school
+                and current_class is None
+                and next_class is not None)
 
     def get_time_elapsed_in_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
