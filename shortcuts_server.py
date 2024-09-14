@@ -40,10 +40,13 @@ def shortcut(name):
         return 'Student not found;', 404
 
     if student.has_no_school(dt):
-        return f'{student.get_no_school_label()};No School!'
-
-    if student.is_on_weekend(dt):
-        return 'No School!;Enjoy your weekend!'
+        label = student.get_no_school_label()
+        if label:
+            return f'{student.get_no_school_label()};No School!'
+        elif student.is_on_weekend(dt):
+            return 'No School!;Enjoy your weekend!'
+        else:
+            return 'No School!;'
 
     current_class = student.get_current_class(dt)
     next_class = student.get_next_class(dt)
