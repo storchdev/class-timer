@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Class Timer
+{% block title %}⌛{% endblock %}
+
+{% block nav %}
+<li><span id="test-text">test</span></li>
+
+<li id="testtime-container">
+  <form method="post">
+    <input type="datetime-local" id="testtime" name="testtime">
+    <button type="submit" id="testtime-button" value="Test Time">Test Time</button>
+  </form>
+</li>
+
 {% endblock %}
 
 {% block content %}
@@ -87,4 +97,5 @@ Class Timer
 
 </script>
 <script src="{{ url_for ('static', filename='timer.js') }}"></script>
+<script src="{{ url_for ('static', filename='testtime.js') }}"></script>
 {% endblock %}

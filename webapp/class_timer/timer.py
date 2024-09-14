@@ -10,8 +10,10 @@ from werkzeug.exceptions import abort
 
 from .auth import login_required
 from .db import get_db
-from schedule import parse_student, Student
+from schedule import parse_student, Student, StudentNotFound
 from datetime import datetime 
+
+from typing import Optional
 
 
 bp = Blueprint("timer", __name__)
@@ -20,29 +22,7 @@ bp = Blueprint("timer", __name__)
 from datetime import datetime
 
 
-def create_schedule_context(student: Student):
-
-    if current_app.config['DEBUG']:
-        # Before school
-        # dt = datetime(2024, 9, 13, 0, 0)
-
-        # During class 
-        dt = datetime(2024, 9, 13, 9, 0)
-
-        # During break
-        # dt = datetime(2024, 9, 13, 9, 30, 58)
-
-        # Last class of the day
-        # dt = datetime(2024, 9, 13, 14, 00)
-
-        # Weekend
-        # dt = datetime(2024, 9, 14, 12, 00)
-
-        # Holiday 
-        # dt = datetime(2024, 9, 2, 12, 00)
-    else:
-        dt = datetime.now()
-
+def create_schedule_context(student: Student, dt: Optional[datetime] = None) -> dict:
     # Initialize dictionary
     context = {
         'background_color': 'default',  # Background color
@@ -102,15 +82,44 @@ def create_schedule_context(student: Student):
     return context
 
 
-@bp.route("/")
+@bp.route("/", methods=["GET", "POST"])
 def index():
     """Show all the posts, most recent first."""
+    if request.method == "POST":
+        dt = datetime.fromisoformat(request.form['testtime'])
+    else: 
+        if current_app.config['DEBUG']:
+            # Before school
+            # dt = datetime(2024, 9, 13, 0, 0)
+
+            # During class 
+            dt = datetime(2024, 9, 13, 9, 0)
+
+            # During break
+            # dt = datetime(2024, 9, 13, 9, 30, 58)
+
+            # Last class of the day
+            # dt = datetime(2024, 9, 13, 14, 00)
+
+            # Weekend
+            # dt = datetime(2024, 9, 14, 12, 00)
+
+            # Holiday 
+            # dt = datetime(2024, 9, 2, 12, 00)
+        else:
+            dt = datetime.now()
+
     row = g.get('user')
     if row is None:
         return redirect(url_for('auth.login'))
         
     student_name = g.get('user')['username']
-    student = parse_student(student_name)
 
-    context = create_schedule_context(student)
+    try:
+        student = parse_student(student_name)
+    except StudentNotFound:
+        flash(f"Student '{student_name}' not found. Perhaps your schedule is not available yet.")
+        return redirect(url_for('auth.logout'))
+
+    context = create_schedule_context(student, dt)
     return render_template("timer/index.html", **context)

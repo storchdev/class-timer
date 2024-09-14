@@ -42,7 +42,7 @@ nav {
   top: 0;
   left: 0;
   z-index: 1000;
-  opacity: 0.0;
+  /* opacity: 0.0; */
   /* Initial transparency */
   transition: opacity 0.5s ease;
   /* Smooth fade-in effect */
@@ -283,4 +283,29 @@ input[type="submit"]:hover {
   #timer p {
     font-size: 2.5em;
   }
+}
+
+#test-text {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#testtime-container {
+  display: none;
+}
+
+#testtime-container form {
+  margin: 0px;
+  padding: 0px;
+}
+
+#testtime-container button {
+  border-radius: 5px;
+  border-color: transparent;
+  background-color: orange;
+  cursor: pointer;
+  box-shadow: none;
+  padding: 5px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: bold;
 }
