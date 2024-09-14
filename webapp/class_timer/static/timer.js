@@ -206,7 +206,7 @@ if (startTime) {
 }
 
 
-if (nextClass) {
+if (nextClass !== "None") {
   const nextClassElement = document.getElementById('next-class');
 
   nextClassElement.addEventListener('mouseover', function () {

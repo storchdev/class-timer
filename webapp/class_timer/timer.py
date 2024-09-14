@@ -24,10 +24,10 @@ def create_schedule_context(student: Student):
 
     if current_app.config['DEBUG']:
         # Before school
-        dt = datetime(2024, 9, 13, 0, 0)
+        # dt = datetime(2024, 9, 13, 0, 0)
 
         # During class 
-        # dt = datetime(2024, 9, 13, 9, 0)
+        dt = datetime(2024, 9, 13, 9, 0)
 
         # During break
         # dt = datetime(2024, 9, 13, 9, 30, 58)
