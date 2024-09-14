@@ -147,7 +147,10 @@ class Student:
     def get_no_school_label(self, dt: Optional[datetime] = None) -> Optional[str]:
         if not self.has_no_school(dt):
             return None 
-        return self._get_day(self._timezonify(dt)).label
+        day = self._get_day(self._timezonify(dt))
+        if day is None:
+            return None
+        return day.label
     
     def is_on_weekend(self, dt: Optional[datetime] = None) -> bool:
         dt = self._timezonify(dt)
