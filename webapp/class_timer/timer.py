@@ -86,7 +86,10 @@ def create_schedule_context(student: Student, dt: Optional[datetime] = None) -> 
 def index():
     """Show all the posts, most recent first."""
     if request.method == "POST":
-        dt = datetime.fromisoformat(request.form['testtime'])
+        if request.form['testtime'] == '':
+            dt = datetime.now()
+        else:
+            dt = datetime.fromisoformat(request.form['testtime'])
     else: 
         if current_app.config['DEBUG']:
             # Before school
