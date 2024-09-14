@@ -1,0 +1,225 @@
+/* Global Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Fira Code', monospace;
+  /* Modern monospace font */
+}
+
+html,
+body {
+  height: 100%;
+  background-color: #1e1e2e;
+  color: #d4d4dc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  /* Ensure everything is centered */
+}
+
+/* Links */
+a {
+  color: #6d9ef5;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #d4d4dc;
+}
+
+/* Navbar */
+nav {
+  background-color: #2a2a3d;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  opacity: 0.0;
+  /* Initial transparency */
+  transition: opacity 0.5s ease;
+  /* Smooth fade-in effect */
+}
+
+nav:hover {
+  opacity: 1;
+  /* Full opacity when hovered */
+}
+
+nav h1 {
+  font-size: 1.6em;
+  font-weight: normal;
+  color: #6d9ef5;
+  transition: color 0.5s ease;
+  /* Optional color transition */
+}
+
+nav ul {
+  list-style-type: none;
+  display: inline-flex;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  font-size: 1.1em;
+  padding: 10px 15px;
+  transition: color 0.5s ease;
+  /* Smooth text color transition */
+  color: #ffffff;
+}
+
+/* Main Content */
+.content {
+  padding: 0;
+  color: #c1c1c1;
+  text-align: center;
+}
+
+/* Timer */
+#timer {
+  width: 60vw;
+  margin: 20px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+
+}
+
+#timer div {
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+#remaining,
+#elapsed {
+  font-size: 10vh;
+  /* Larger timer font size */
+  font-weight: bold;
+  color: #61afef;
+  /* width: 50%; */
+}
+
+
+/* Class and Schedule */
+#schedule {
+  padding: 20px;
+  text-align: center;
+  margin-top: 10%;
+}
+
+#next-class {
+  margin: 50px;
+}
+
+#current-class-header,
+#next-class-header,
+#time-remaining-header,
+#time-elapsed-header {
+  font-size: 2.5vh;
+  color: rgba(200, 200, 200, 0.6);
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin-left: 5px;
+  text-transform: lowercase;
+  margin-bottom: 5px;
+}
+
+#current-class-name,
+#next-class-name {
+  font-size: 8vh;
+  font-weight: bold;
+  color: #f5f5f5;
+}
+
+/* Messages */
+
+
+#main-message p,
+#special-message p {
+  display: block;
+  font-size: 4vh;
+  margin: 50px auto;
+  text-align: center;
+  max-width: 80%;
+
+}
+
+#main-message p {
+  color: #ffcc00;
+}
+
+#special-message p {
+  color: #61afef;
+}
+
+
+/* Forms */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 30px auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+label {
+  font-size: 1.2em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"] {
+  padding: 10px;
+  font-size: 1.2em;
+  border: 2px solid #3a3a54;
+  border-radius: 5px;
+  background-color: #1e1e2e;
+  color: #f5f5f5;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #61afef;
+}
+
+input[type="submit"] {
+  background-color: #61afef;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #d4d4dc;
+  color: #1e1e2e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  form {
+    width: 90%;
+  }
+
+  #timer p {
+    font-size: 2.5em;
+  }
+}

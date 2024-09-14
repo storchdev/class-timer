@@ -6,7 +6,47 @@ Class Timer
 
 {% block content %}
 <div id="schedule">
-  <!-- Main message-->
+ 
+
+  <!-- Current and next classes -->
+  {% if current_class %}
+  <div id="current-class">
+    <div id="current-class-header">Current Class</div>
+    <div id="current-class-name">{{ current_class }}</div>
+  </div>
+  {% endif %}
+
+
+  <!-- Timer display -->
+  {% if end_time %}
+  <div id="timer">
+    {% if end_time %}
+    <div id="time-remaining">
+      <div id="time-remaining-header">Time Remaining</div>
+      <div id="remaining">{{ end_time }}</div>
+    </div>
+    {% endif %}
+    {% if start_time %}
+    <div id="time-elapsed">
+      <div id="time-elapsed-header">Time Elapsed</div>
+      <div id="elapsed">{{ start_time }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+
+  {% if next_class %}
+  <hr>
+  <div id="next-class">
+    <div id="next-class-header">Next Class</div>
+    <div id="next-class-name">{{ next_class }}</div>
+  </div>
+  {% endif %}
+
+
+  <hr>
+   <!-- Main message-->
   <div id="main-message">
     <p id="p-main-message"></p>
   </div>
@@ -16,159 +56,27 @@ Class Timer
     <p id="p-special-message"></p>
   </div>
 
-  <!-- Current and next classes -->
-  {% if current_class %}
-  <div id="current-class">
-    Current Class: {{ current_class }}
-  </div>
-  {% endif %}
-
-  {% if next_class %}
-  <div id="next-class">
-    Next Class: {{ next_class }}
-  </div>
-  {% endif %}
-
-  <!-- Timer display -->
-  {% if end_time %}
-  <div id="timer">
-    {% if end_time %}
-    <p>Time remaining: <span id="remaining">{{ end_time }}</span></p>
-    {% endif %}
-    {% if start_time %}
-    <p>Time elapsed: <span id="elapsed">{{ start_time }}</span></p>
-    {% endif %}
-  </div>
-  {% endif %}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let remainingElement = document.getElementById('remaining');
-    let elapsedElement = document.getElementById('elapsed');
-    let specialMessageElement = document.getElementById('p-special-message');
-    let mainMessageElement = document.getElementById('p-main-message');
-
     // Data passed from the backend (Using JSON.stringify for better editor parsing)
-    let inClass = JSON.parse('{{ in_class | tojson | safe }}');
-    let inBreak = JSON.parse('{{ in_break | tojson | safe }}');
-    let beforeSchool = JSON.parse('{{ before_school | tojson | safe }}');
-    let noSchool = JSON.parse('{{ no_school | tojson | safe }}');
-    let noSchoolLabel = JSON.parse('{{ no_school_label | tojson | safe }}');
-    let weekend = JSON.parse('{{ weekend | tojson | safe }}');
-    let currentClass = "{{ current_class | safe }}";
-    let nextClass = "{{ next_class | safe }}";
-    const debug = "{{ debug | safe }}";
+  let inClass = JSON.parse('{{ in_class | tojson }}');
+  let inBreak = JSON.parse('{{ in_break | tojson }}');
+  let beforeSchool = JSON.parse('{{ before_school | tojson }}');
+  let noSchool = JSON.parse('{{ no_school | tojson }}');
+  let noSchoolLabel = JSON.parse('{{ no_school_label | tojson }}');
+  let weekend = JSON.parse('{{ weekend | tojson }}');
+  let currentClass = "{{ current_class | safe }}";
+  let nextClass = "{{ next_class | safe }}";
+  const debug = "{{ debug | tojson }}";
 
-    let endTime = parseFloat("{{ end_time }}");
-    let startTime = parseFloat("{{ start_time }}");
+  let endTime = parseFloat("{{ end_time }}");
+  let startTime = parseFloat("{{ start_time }}");
+  var currentTime = parseFloat("{{ current_time }}");
 
-    var currentTime = parseFloat("{{ current_time }}");
-    const offset = Date.now() / 1000 - currentTime;
-
-    var remainingTime;
-    var elapsedTime;
-
-    function updateRemainingTime() {
-      if (endTime) {
-        currentTime = Date.now() / 1000;
-        if (debug) currentTime -= offset;
-        remainingTime = endTime - currentTime;
-        remainingElement.innerText = humanizeTime(remainingTime);
-      }
-    }
-
-    function updateElapsedTime() {
-      if (startTime) {
-        currentTime = Date.now() / 1000;
-        if (debug) currentTime -= offset;
-        elapsedTime = currentTime - startTime;
-        elapsedElement.innerText = humanizeTime(elapsedTime);
-      }
-    }
-
-    updateRemainingTime();
-    updateElapsedTime();
-
-    // Humanize the time
-    function humanizeTime(seconds) {
-      let hours = Math.floor(seconds / 3600);
-      let minutes = Math.floor((seconds % 3600) / 60);
-      let secs = Math.floor(seconds % 60);
-
-      let timeString = '';
-      if (hours > 0) timeString += hours + 'h ';
-      if (minutes > 0) timeString += minutes + 'm ';
-      timeString += secs + 's';
-      return timeString;
-    }
-
-    // Generate message based on state
-    function generateSpecialMessage() {
-      if (noSchoolLabel) {
-        specialMessageElement.innerText = noSchoolLabel;
-      } else if (weekend) {
-        specialMessageElement.innerText = "Enjoy your weekend!";
-      } else if (inBreak) {
-        specialMessageElement.innerText = "Get to your next class!";
-      } else if (beforeSchool) {
-        specialMessageElement.innerText = "Enjoy your day!";
-      } else if (inClass && nextClass !== "None") {
-        specialMessageElement.innerText = "lock in";
-      } else if (inClass && nextClass === "None") {
-        specialMessageElement.innerText = "lock in this is the last one";
-      } else if (!inClass && nextClass === "None") {
-        specialMessageElement.innerText = "School is over!";
-      }
-    }
-
-    function generateMainMessage() {
-      if (noSchool) {
-        mainMessageElement.innerText = "No school";
-      } else if (inBreak) {
-        mainMessageElement.innerText = "Break time";
-      } else if (beforeSchool) {
-        mainMessageElement.innerText = "School has not started yet";
-      } else if (inClass) {
-        mainMessageElement.innerText = "Class is in progress";
-      } else if (!inClass && !nextClass) {
-        mainMessageElement.innerText = "School has ended"
-      }
-      // etc
-    }
-
-    generateMainMessage();
-    generateSpecialMessage();
-
-    // Timer update logic (similar to previous but handling both elapsed and remaining)
-
-    // Sync the loop to the real clock
-    const now = new Date();
-    const delay = 1000 - now.getMilliseconds();
-
-    setTimeout(() => {
-      setInterval(() => {
-        // Update remaining time
-        console.log(remainingTime);
-
-        updateRemainingTime();
-        updateElapsedTime();
-
-        // Refresh the page when timer reaches zero
-
-        if (remainingTime <= 0) {
-          clearInterval(remainingInterval);
-          location.reload();  // Refresh the page
-        }
-
-        remainingElement.innerText = humanizeTime(Math.round(remainingTime));
-
-        // Update elapsed time
-        if (elapsedElement) {
-          elapsedElement.innerText = humanizeTime(Math.round(elapsedTime));
-        }
-      }, 1000);  // Update every second
-    }, delay);
-  });
 </script>
+<script src="{{ url_for ('static', filename='timer.js') }}"></script>
 {% endblock %}

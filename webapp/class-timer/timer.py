@@ -27,10 +27,10 @@ def create_schedule_context(student: Student):
         # dt = datetime(2024, 9, 13, 0, 0)
 
         # During class 
-        # dt = datetime(2024, 9, 13, 9, 0)
+        dt = datetime(2024, 9, 13, 9, 0)
 
         # During break
-        dt = datetime(2024, 9, 13, 9, 30)
+        # dt = datetime(2024, 9, 13, 9, 30, 58)
 
         # Last class of the day
         # dt = datetime(2024, 9, 13, 14, 00)
@@ -68,7 +68,6 @@ def create_schedule_context(student: Student):
         else:
             context['no_school'] = True
             context['background_color'] = 'no-school'
-            print('hi')
             context['no_school_label'] = student.get_no_school_label(dt)
     else:
         # Get current and next classes
@@ -81,13 +80,13 @@ def create_schedule_context(student: Student):
         if student.is_before_school(dt):
             context['background_color'] = 'before-school'
             context['before_school'] = True
-            context['end_time'] = student.get_class_start(dt)
+            context['end_time'] = student.get_class_start(dt).timestamp()
 
         # Handle break
         if student.is_in_break(dt):
             context['background_color'] = 'break'
             context['in_break'] = True
-            context['end_time'] = student.get_class_start(dt)
+            context['end_time'] = student.get_class_start(dt).timestamp()
 
         # Handle in class
         if current_class:
