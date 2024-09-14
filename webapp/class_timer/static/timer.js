@@ -138,15 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Timer update logic (similar to previous but handling both elapsed and remaining)
 
-  // Sync the loop to the real clock
-  const now = new Date();
-  const delay = 1000 - now.getMilliseconds();
-
-  // If neither remaining or elapsed time is set, don't start the timer
-  if (!endTime && !startTime) {
-    return;
-  }
-
   function synchronizedLoop() {
     // Get the current time
     var now = new Date();
