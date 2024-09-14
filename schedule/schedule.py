@@ -107,6 +107,13 @@ class Student:
         else:
             classs = current_class
         return datetime.combine(dt, classs.start, self.timezone)
+    
+    def get_next_class_start(self, dt: Optional[datetime] = None) -> datetime:
+        dt = self._timezonify(dt)
+        next_class = self.get_next_class(dt)
+        if next_class is None:
+            return None
+        return datetime.combine(dt, next_class.start, self.timezone)
 
     def get_time_elapsed_in_class(self, dt: Optional[datetime] = None) -> Optional[float]:
         dt = self._timezonify(dt)
