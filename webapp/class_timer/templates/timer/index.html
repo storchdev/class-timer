@@ -11,8 +11,8 @@ Class Timer
   <!-- Current and next classes -->
   {% if current_class %}
   <div id="current-class">
-    <div id="current-class-header">Current Class</div>
-    <div id="current-class-name">{{ current_class }}</div>
+    <div class="small-header">Current Class</div>
+    <div class="class-name">{{ current_class }}</div>
   </div>
   {% endif %}
 
@@ -22,14 +22,20 @@ Class Timer
   <div id="timer">
     {% if end_time %}
     <div id="time-remaining">
-      <div id="time-remaining-header">Time Remaining</div>
-      <div id="remaining">{{ end_time }}</div>
+      <div class="small-header">Time Remaining</div>
+      <div id="remaining-timer-ticking" class="timer-ticking">0h 0m 0s</div>
     </div>
     {% endif %}
+
+    <div id="current-time">
+      <div class="small-header">Current Time</div>
+      <div id="current-timer-ticking" class="timer-ticking">00:00</div>
+    </div>
+
     {% if start_time %}
     <div id="time-elapsed">
-      <div id="time-elapsed-header">Time Elapsed</div>
-      <div id="elapsed">{{ start_time }}</div>
+      <div class="small-header">Time Elapsed</div>
+      <div id="elapsed-timer-ticking" class="timer-ticking">0h 0m 0s</div>
     </div>
     {% endif %}
   </div>
@@ -39,21 +45,24 @@ Class Timer
   {% if next_class %}
   <hr>
   <div id="next-class">
-    <div id="next-class-header">Next Class</div>
-    <div id="next-class-name">{{ next_class }}</div>
+    <div class="small-header">Next Class</div>
+    <div class="class-name">{{ next_class }}</div>
   </div>
   {% endif %}
 
 
   <hr>
-   <!-- Main message-->
-  <div id="main-message">
-    <p id="p-main-message"></p>
-  </div>
 
-  <!-- Special messages will be displayed here -->
-  <div id="special-message">
-    <p id="p-special-message"></p>
+  <div id="messages">
+    <!-- Main message-->
+    <div id="main-message">
+      <p id="p-main-message"></p>
+    </div>
+
+    <!-- Special messages will be displayed here -->
+    <div id="special-message">
+      <p id="p-special-message"></p>
+    </div>
   </div>
 
 </div>
@@ -76,6 +85,7 @@ Class Timer
   let endTime = parseFloat("{{ end_time }}");
   let startTime = parseFloat("{{ start_time }}");
   var currentTime = parseFloat("{{ current_time }}");
+  let nextClassStartTime = parseFloat("{{ next_class_start_time }}");
 
 </script>
 <script src="{{ url_for ('static', filename='timer.js') }}"></script>

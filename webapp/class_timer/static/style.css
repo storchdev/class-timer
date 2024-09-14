@@ -1,9 +1,9 @@
 /* Global Styling */
 * {
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Fira Code', monospace;
+  font-family: 'Fira Mono', monospace;
   /* Modern monospace font */
 }
 
@@ -12,7 +12,7 @@ body {
   height: 100%;
   background-color: #1e1e2e;
   color: #d4d4dc;
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -31,9 +31,12 @@ a:hover {
 
 /* Navbar */
 nav {
+  display: flex;
+  justify-content: space-between;
+
   background-color: #2a2a3d;
-  padding: 15px;
   text-align: center;
+  padding: 5px;
   width: 100%;
   position: fixed;
   top: 0;
@@ -55,14 +58,15 @@ nav h1 {
   font-weight: normal;
   color: #6d9ef5;
   transition: color 0.5s ease;
-  /* Optional color transition */
+  padding: 10px;
+  margin: 0px;
 }
 
 nav ul {
   list-style-type: none;
   display: inline-flex;
   gap: 20px;
-  padding: 0;
+  padding: 10px;
   margin: 0;
 }
 
@@ -79,61 +83,72 @@ nav li {
   padding: 0;
   color: #c1c1c1;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  height: 100%;
 }
 
 /* Timer */
 #timer {
-  width: 60vw;
   margin: 20px;
   text-align: center;
   align-items: center;
   display: flex;
   justify-content: space-around;
-
 }
 
 #timer div {
   margin-bottom: 0px;
   text-align: center;
+  width: 600px;
 }
 
-#remaining,
-#elapsed {
-  font-size: 10vh;
+.timer-ticking {
+  font-size: 6em;
   /* Larger timer font size */
   font-weight: bold;
   color: #61afef;
   /* width: 50%; */
 }
 
+#current-timer-ticking {
+  font-size: 5em;
+  font-weight: normal;
+  color: #98c379;
+}
+
 
 /* Class and Schedule */
 #schedule {
-  padding: 20px;
+  /* padding: 20px; */
+  min-width: 80%;
   text-align: center;
-  margin-top: 10%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
 }
 
 #next-class {
   margin: 50px;
 }
 
-#current-class-header,
-#next-class-header,
-#time-remaining-header,
-#time-elapsed-header {
-  font-size: 2.5vh;
+/* #time-remaining,
+#time-elapsed {
+  padding-left: 20px;
+  padding-right: 20px;
+} */
+
+.small-header {
+  font-size: 1.5em;
   color: rgba(200, 200, 200, 0.6);
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   text-align: center;
-  margin-left: 5px;
   text-transform: lowercase;
-  margin-bottom: 5px;
 }
 
-#current-class-name,
-#next-class-name {
-  font-size: 8vh;
+.class-name {
+  font-size: 5em;
   font-weight: bold;
   color: #f5f5f5;
 }
@@ -141,14 +156,17 @@ nav li {
 /* Messages */
 
 
-#main-message p,
-#special-message p {
+#messages {
+  margin: 50px;
+}
+
+#messages p {
+  font-family: 'Quicksand', sans-serif;
   display: block;
-  font-size: 4vh;
-  margin: 50px auto;
+  font-size: 2.5em;
   text-align: center;
   max-width: 80%;
-
+  padding: 10px;
 }
 
 #main-message p {
@@ -159,6 +177,38 @@ nav li {
   color: #61afef;
 }
 
+
+.flash-container {
+  /* width: 100vw; */
+  width: 100%;
+  position: fixed;
+  bottom: 50px;
+  align-items: center;
+}
+
+.flash {
+  /* padding: 15px;
+  margin: 10px 0;
+  border: 1px solid transparent;
+  border-radius: 5px; */
+  width: 100%;
+  font-size: 16px;
+  /* position: fixed; */
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  animation: fadeOut 5s ease-in forwards;
+}
 
 /* Forms */
 form {
@@ -176,6 +226,7 @@ label {
 }
 
 input[type="text"],
+input[type="username"],
 input[type="password"],
 input[type="submit"] {
   padding: 10px;
@@ -187,6 +238,7 @@ input[type="submit"] {
 }
 
 input[type="text"]:focus,
+input[type="username"]:focus,
 input[type="password"]:focus {
   outline: none;
   border-color: #61afef;
@@ -202,6 +254,14 @@ input[type="submit"] {
 input[type="submit"]:hover {
   background-color: #d4d4dc;
   color: #1e1e2e;
+}
+
+/* center Y axis */
+#login,
+#register {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-60%);
 }
 
 /* Responsive Design */

@@ -24,10 +24,10 @@ def create_schedule_context(student: Student):
 
     if current_app.config['DEBUG']:
         # Before school
-        # dt = datetime(2024, 9, 13, 0, 0)
+        dt = datetime(2024, 9, 13, 0, 0)
 
         # During class 
-        dt = datetime(2024, 9, 13, 9, 0)
+        # dt = datetime(2024, 9, 13, 9, 0)
 
         # During break
         # dt = datetime(2024, 9, 13, 9, 30, 58)
@@ -51,6 +51,7 @@ def create_schedule_context(student: Student):
         'start_time': None,  # Time elapsed in the current class (if applicable)
         'current_class': None,
         'next_class': None,
+        'next_class_start_time': None,
         'in_class': False,  # Indicate if the student is currently in class
         'in_break': False,  # Indicate if the student is on break
         'before_school': False, # Indicate if it's before the first class
@@ -74,7 +75,10 @@ def create_schedule_context(student: Student):
         current_class = student.get_current_class(dt)
         next_class = student.get_next_class(dt)
         context['current_class'] = current_class.name if current_class else None
-        context['next_class'] = next_class.name if next_class else None
+
+        if next_class:
+            context['next_class'] = next_class.name 
+            context['next_class_start_time'] = student.get_next_class_start(dt).timestamp() 
 
         # Handle before school
         if student.is_before_school(dt):

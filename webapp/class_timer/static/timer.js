@@ -1,47 +1,102 @@
+var hoveringElapsed = false;
+var hoveringRemaining = false;
+
+
+let remainingElement = document.getElementById('remaining-timer-ticking');
+let elapsedElement = document.getElementById('elapsed-timer-ticking');
+let currentTimeElement = document.getElementById('current-timer-ticking');
+let specialMessageElement = document.getElementById('p-special-message');
+let mainMessageElement = document.getElementById('p-main-message');
+
+const offset = Date.now() / 1000 - currentTime;
+
+var remainingTime;
+var elapsedTime;
+
+
+// Humanize the time
+function humanizeTime(seconds) {
+  let hours = Math.floor(seconds / 3600);
+  let minutes = Math.floor((seconds % 3600) / 60);
+  let secs = Math.floor(seconds % 60);
+
+  let timeString = '';
+  if (hours > 0) timeString += hours + 'h ';
+  if (minutes > 0) timeString += minutes + 'm ';
+  timeString += secs + 's';
+  return timeString;
+}
+
+function get12HourTime(timestamp, showSeconds = false) {
+  let date = new Date(timestamp * 1000); // Convert to milliseconds
+  let hours = date.getHours(); // Get the hour (0-23)
+  let minutes = date.getMinutes(); // Get the minutes (0-59)
+  let seconds = date.getSeconds();
+
+  // Convert 24-hour format to 12-hour format
+  hours = hours % 12;
+  hours = hours ? hours : 12; // Adjust '0' hour to '12'
+
+  // Add leading zero to minutes if needed
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+
+  // Combine into the desired format
+  if (showSeconds) {
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+    return `${hours}:${minutes}:${seconds}`;
+  }
+  return `${hours}:${minutes}`;
+}
+
+
+function getCurrentTime() {
+  let newCurrentTime = Date.now() / 1000;
+  if (debug) newCurrentTime -= offset;
+  return Math.round(newCurrentTime);
+}
+
+function getRemainingTime() {
+  if (endTime) {
+    remainingTime = endTime - getCurrentTime();
+    return Math.round(remainingTime);
+  }
+}
+
+function getElapsedTime() {
+  if (startTime) {
+    elapsedTime = getCurrentTime() - startTime;
+    return Math.round(elapsedTime);
+  }
+}
+
+function updateRemainingTime() {
+  if (remainingElement && !hoveringRemaining) {
+    remainingTime = getRemainingTime();
+    remainingElement.innerText = humanizeTime(remainingTime);
+  }
+}
+
+function updateElapsedTime() {
+  if (elapsedElement && !hoveringElapsed) {
+    elapsedTime = getElapsedTime();
+    elapsedElement.innerText = humanizeTime(elapsedTime);
+  }
+}
+
+function updateCurrentTime() {
+  if (currentTimeElement) {
+    currentTime = getCurrentTime();
+    currentTimeElement.innerText = get12HourTime(currentTime, true);
+  }
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
-  let remainingElement = document.getElementById('remaining');
-  let elapsedElement = document.getElementById('elapsed');
-  let specialMessageElement = document.getElementById('p-special-message');
-  let mainMessageElement = document.getElementById('p-main-message');
 
-  const offset = Date.now() / 1000 - currentTime;
-
-  var remainingTime;
-  var elapsedTime;
-
-  function updateRemainingTime() {
-    if (endTime) {
-      currentTime = Date.now() / 1000;
-      if (debug) currentTime -= offset;
-      remainingTime = endTime - currentTime;
-      remainingElement.innerText = humanizeTime(remainingTime);
-    }
-  }
-
-  function updateElapsedTime() {
-    if (startTime) {
-      currentTime = Date.now() / 1000;
-      if (debug) currentTime -= offset;
-      elapsedTime = currentTime - startTime;
-      elapsedElement.innerText = humanizeTime(elapsedTime);
-    }
-  }
 
   updateRemainingTime();
   updateElapsedTime();
 
-  // Humanize the time
-  function humanizeTime(seconds) {
-    let hours = Math.floor(seconds / 3600);
-    let minutes = Math.floor((seconds % 3600) / 60);
-    let secs = Math.floor(seconds % 60);
-
-    let timeString = '';
-    if (hours > 0) timeString += hours + 'h ';
-    if (minutes > 0) timeString += minutes + 'm ';
-    timeString += secs + 's';
-    return timeString;
-  }
 
   // Generate message based on state
   function generateSpecialMessage() {
@@ -60,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (!inClass && nextClass === "None") {
       specialMessageElement.innerText = "School is over!";
     }
+    specialMessageElement.innerHTML += " :)"
   }
 
   function generateMainMessage() {
@@ -91,26 +147,75 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
-  setTimeout(() => {
-    let remainingInterval = setInterval(() => {
+  function synchronizedLoop() {
+    // Get the current time
+    var now = new Date();
+    // Calculate the delay until the next exact second
+    var delay = 1000 - now.getMilliseconds();
+
+    setTimeout(function () {
+      // Your code to run every second
+      console.log("Tick: " + new Date().toLocaleTimeString());
+
+      if (remainingTime <= 0) {
+        location.reload();  // Refresh the page
+        return;
+      }
+
       // Update times
       updateRemainingTime();
       updateElapsedTime();
+      updateCurrentTime();
 
-      // Refresh the page when timer reaches zero
+      // Schedule the next execution
+      synchronizedLoop();
+    }, delay);
+  }
 
-      if (remainingTime <= 0) {
-        clearInterval(remainingInterval);
-        location.reload();  // Refresh the page
-      }
-
-      if (remainingElement) {
-        remainingElement.innerText = humanizeTime(Math.round(remainingTime));
-      }
-      if (elapsedElement) {
-        elapsedElement.innerText = humanizeTime(Math.round(elapsedTime));
-      }
-
-    }, 1000);  // Update every second
-  }, delay);
+  synchronizedLoop();
 });
+
+
+if (endTime) {
+  const timeRemaining = document.getElementById('time-remaining');
+  timeRemaining.addEventListener('mouseover', function () {
+    hoveringRemaining = true;
+    timeRemaining.getElementsByClassName('small-header')[0].innerText = "ending at";
+    timeRemaining.getElementsByClassName('timer-ticking')[0].innerText = get12HourTime(endTime);
+  });
+  timeRemaining.addEventListener('mouseout', function () {
+    hoveringRemaining = false;
+    timeRemaining.getElementsByClassName('small-header')[0].innerText = "time remaining";
+    updateRemainingTime();
+  });
+}
+
+if (startTime) {
+  const timeElapsed = document.getElementById('time-elapsed');
+  timeElapsed.addEventListener('mouseover', function () {
+    hoveringElapsed = true;
+    timeElapsed.getElementsByClassName('small-header')[0].innerText = "started at";
+    timeElapsed.getElementsByClassName('timer-ticking')[0].innerText = get12HourTime(startTime);
+  });
+
+  timeElapsed.addEventListener('mouseout', function () {
+    hoveringElapsed = false;
+    timeElapsed.getElementsByClassName('small-header')[0].innerText = "time elapsed";
+    updateElapsedTime();
+  });
+}
+
+
+if (nextClass) {
+  const nextClassElement = document.getElementById('next-class');
+
+  nextClassElement.addEventListener('mouseover', function () {
+    nextClassElement.getElementsByClassName('small-header')[0].innerText = 'next class starts at';
+    nextClassElement.getElementsByClassName('class-name')[0].innerText = get12HourTime(nextClassStartTime);
+  });
+
+  nextClassElement.addEventListener('mouseout', function () {
+    nextClassElement.getElementsByClassName('small-header')[0].innerText = 'next class';
+    nextClassElement.getElementsByClassName('class-name')[0].innerText = nextClass;
+  });
+}
