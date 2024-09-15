@@ -80,24 +80,26 @@ nav:hover {
 }
 
 nav h1 {
-  font-size: 1.6em;
+  font-size: 1em;
   font-weight: normal;
   color: #6d9ef5;
   transition: color 0.5s ease;
-  padding: 10px;
-  margin: 0px;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+
 }
 
 nav ul {
   list-style-type: none;
   display: inline-flex;
   gap: 20px;
-  padding: 10px;
+  padding: 0px;
   margin: 0;
 }
 
 nav li {
-  font-size: 1.1em;
+  font-size: 1em;
   padding: 10px 15px;
   transition: color 0.5s ease;
   /* Smooth text color transition */
