@@ -87,7 +87,7 @@ def index():
         if request.form['testtime'] == '':
             dt = datetime.now()
         else:
-            dt = datetime.fromisoformat(request.form['testtime'])
+            dt = datetime.fromisoformat(request.form['testtime']).astimezone()
     else: 
         if current_app.config['DEBUG']:
             # Before school
