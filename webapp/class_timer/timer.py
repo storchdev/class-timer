@@ -45,10 +45,8 @@ def create_schedule_context(student: Student, dt: Optional[datetime] = None) -> 
     if student.has_no_school(dt):
         if student.is_on_weekend(dt):
             context['weekend'] = True
-            context['background_color'] = 'weekend'
         else:
             context['no_school'] = True
-            context['background_color'] = 'no-school'
             context['no_school_label'] = student.get_no_school_label(dt)
     else:
         # Get current and next classes
@@ -68,7 +66,7 @@ def create_schedule_context(student: Student, dt: Optional[datetime] = None) -> 
 
         # Handle break
         if student.is_in_break(dt):
-            context['background_color'] = 'break'
+            context['background_color'] = 'in-break'
             context['in_break'] = True
             context['end_time'] = student.get_class_start(dt).timestamp()
 

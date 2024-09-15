@@ -88,6 +88,7 @@
   let weekend = JSON.parse('{{ weekend | tojson }}');
   let currentClass = "{{ current_class | safe }}";
   let nextClass = "{{ next_class | safe }}";
+  let backgroundColor = JSON.parse('{{ background_color | tojson }}');
   const debug = "{{ debug | tojson }}";
 
   let endTime = parseFloat("{{ end_time }}");

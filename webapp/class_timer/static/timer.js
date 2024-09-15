@@ -93,6 +93,12 @@ function updateCurrentTime() {
 
 document.addEventListener('DOMContentLoaded', function () {
 
+  const body = document.body;
+
+  // Clear class list 
+  body.classList.remove('default', 'before-school', 'in-break', 'in-class');
+  body.classList.add(backgroundColor);
+
 
   updateRemainingTime();
   updateElapsedTime();

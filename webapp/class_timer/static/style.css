@@ -19,6 +19,32 @@ body {
   /* Ensure everything is centered */
 }
 
+
+/* Default background (weekends, holidays, after school) */
+body.default {
+  background-color: #1e1e2e;
+  /* Dark desaturated blue */
+}
+
+/* Before school */
+body.before-school {
+  background-color: #4e4a66;
+  /* Light desaturated purple */
+}
+
+/* During class */
+body.in-class {
+  background-color: #1c3a57;
+  /* Deep muted blue */
+}
+
+/* In between classes */
+body.in-break {
+  background-color: #57363e;
+  /* Warm muted orange */
+}
+
+
 /* Links */
 a {
   color: #6d9ef5;
