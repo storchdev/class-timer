@@ -122,7 +122,7 @@ def index():
         student = parse_student(student_name)
     except StudentNotFound:
         flash(f"Student '{student_name}' not found. Perhaps your schedule is not available yet.")
-        return redirect(url_for('auth.logout'))
+        return redirect(url_for('auth.login'))
 
     context = create_schedule_context(student, dt)
     return render_template("timer/index.html", **context)
