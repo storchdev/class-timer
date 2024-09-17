@@ -364,15 +364,11 @@ input[type="submit"]:hover {
 .progress-text span {
   font-size: 3rem;
   font-family: 'Courier New', Courier, monospace;
+  color: #ff4769;
 }
 
 #progressInt {
   font-size: 6rem;
-  color: #ff4769;
-}
-
-#progressDecimal {
-  color: #762236;
 }
 
 #progressPercentSymbol {
