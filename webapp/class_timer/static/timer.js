@@ -2,9 +2,9 @@ var hoveringElapsed = false;
 var hoveringRemaining = false;
 
 
-let remainingElement = document.getElementById('remaining-timer-ticking');
-let elapsedElement = document.getElementById('elapsed-timer-ticking');
-let currentTimeElement = document.getElementById('current-timer-ticking');
+let remainingElement = document.getElementById('remainingTimerTicking');
+let elapsedElement = document.getElementById('elapsedTimerTicking');
+let currentTimeElement = document.getElementById('currentTimerTicking');
 let specialMessageElement = document.getElementById('p-special-message');
 let mainMessageElement = document.getElementById('p-main-message');
 
@@ -85,11 +85,32 @@ function updateElapsedTime() {
 
 function updateCurrentTime() {
   if (currentTimeElement) {
-    currentTime = getCurrentTime();
-    currentTimeElement.innerText = get12HourTime(currentTime, true);
+    currentTimeElement.innerText = get12HourTime(getCurrentTime(), true);
   }
 }
 
+function updateTitle() {
+  if (endTime) {
+    seconds = endTime - getCurrentTime();
+    document.title = '⏳' + humanizeTime(seconds);
+  }
+}
+
+function updateProgressBar() {
+  if (currentClass !== "None") {
+    let rn = getCurrentTime();
+    let percent = (rn - startTime) / (endTime - startTime);
+    let rounded = (percent * 100).toFixed(1);
+    let parts = rounded.split('.');
+    document.getElementById('progressInt').innerHTML = parts[0]; // Integer part
+    document.getElementById('progressDecimal').innerHTML = '.' + parts[1]; // Decimal part
+
+    let container = document.querySelector('.progress-container');
+    let bar = document.querySelector('.progress-bar')
+    let displayWidth = Math.max(percent * container.offsetWidth, container.offsetHeight);
+    bar.style.width = displayWidth + 'px';
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -163,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
       updateRemainingTime();
       updateElapsedTime();
       updateCurrentTime();
+      updateProgressBar();
+      updateTitle();
 
       // Schedule the next execution
       synchronizedLoop();
@@ -172,47 +195,3 @@ document.addEventListener('DOMContentLoaded', function () {
   synchronizedLoop();
 });
 
-
-if (endTime) {
-  const timeRemaining = document.getElementById('time-remaining');
-  timeRemaining.addEventListener('mouseover', function () {
-    hoveringRemaining = true;
-    timeRemaining.getElementsByClassName('small-header')[0].innerText = "ending at";
-    timeRemaining.getElementsByClassName('timer-ticking')[0].innerText = get12HourTime(endTime);
-  });
-  timeRemaining.addEventListener('mouseout', function () {
-    hoveringRemaining = false;
-    timeRemaining.getElementsByClassName('small-header')[0].innerText = "time remaining";
-    updateRemainingTime();
-  });
-}
-
-if (startTime) {
-  const timeElapsed = document.getElementById('time-elapsed');
-  timeElapsed.addEventListener('mouseover', function () {
-    hoveringElapsed = true;
-    timeElapsed.getElementsByClassName('small-header')[0].innerText = "started at";
-    timeElapsed.getElementsByClassName('timer-ticking')[0].innerText = get12HourTime(startTime);
-  });
-
-  timeElapsed.addEventListener('mouseout', function () {
-    hoveringElapsed = false;
-    timeElapsed.getElementsByClassName('small-header')[0].innerText = "time elapsed";
-    updateElapsedTime();
-  });
-}
-
-
-if (nextClass !== "None") {
-  const nextClassElement = document.getElementById('next-class');
-
-  nextClassElement.addEventListener('mouseover', function () {
-    nextClassElement.getElementsByClassName('small-header')[0].innerText = 'next class starts at';
-    nextClassElement.getElementsByClassName('class-name')[0].innerText = get12HourTime(nextClassStartTime);
-  });
-
-  nextClassElement.addEventListener('mouseout', function () {
-    nextClassElement.getElementsByClassName('small-header')[0].innerText = 'next class';
-    nextClassElement.getElementsByClassName('class-name')[0].innerText = nextClass;
-  });
-}

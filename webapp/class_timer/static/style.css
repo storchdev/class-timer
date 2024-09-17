@@ -106,6 +106,10 @@ nav li {
   color: #ffffff;
 }
 
+hr {
+  margin: 20px;
+}
+
 /* Main Content */
 .content {
   padding: 0;
@@ -118,7 +122,6 @@ nav li {
 
 /* Timer */
 #timer {
-  margin: 20px;
   text-align: center;
   align-items: center;
   display: flex;
@@ -140,7 +143,7 @@ nav li {
   /* width: 50%; */
 }
 
-#current-timer-ticking {
+#currentTimerTicking {
   font-size: 3em;
   font-weight: normal;
   color: #98c379;
@@ -157,11 +160,7 @@ nav li {
   transform: translateY(-50%);
 }
 
-#next-class {
-  margin: 50px;
-}
-
-/* #time-remaining,
+/* #timeRemaining,
 #time-elapsed {
   padding-left: 20px;
   padding-right: 20px;
@@ -184,10 +183,6 @@ nav li {
 /* Messages */
 
 
-#messages {
-  margin-top: 50px;
-}
-
 #messages p {
   font-family: 'Quicksand', sans-serif;
   display: block;
@@ -197,11 +192,11 @@ nav li {
   padding: 10px;
 }
 
-#main-message p {
+#mainMessage p {
   color: #ffcc00;
 }
 
-#special-message p {
+#specialMessage p {
   color: #61afef;
 }
 
@@ -313,21 +308,21 @@ input[type="submit"]:hover {
   }
 }
 
-#test-text {
+#testText {
   text-decoration: underline;
   cursor: pointer;
 }
 
-#testtime-container {
+#testTimeContainer {
   display: none;
 }
 
-#testtime-container form {
+#testTimeContainer form {
   margin: 0px;
   padding: 0px;
 }
 
-#testtime-container button {
+#testTimeContainer button {
   border-radius: 5px;
   border-color: transparent;
   background-color: orange;
@@ -336,4 +331,50 @@ input[type="submit"]:hover {
   padding: 5px;
   font-family: 'Quicksand', sans-serif;
   font-weight: bold;
+}
+
+
+.progress-container {
+  margin: 20px;
+  width: 90vw;
+  height: 2em;
+  border-radius: 20px;
+  border: 2px solid white;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.progress-bar {
+  background: linear-gradient(to right, #5161ee, #d488f3);
+  background-size: 90vw 100%;
+  border-radius: 20px;
+  width: 0px;
+  height: 100%;
+  margin: 0;
+}
+
+.progress-text {
+  position: absolute;
+  right: 20px;
+  font-size: 0px;
+  font-weight: bold;
+  top: -20px;
+}
+
+.progress-text span {
+  font-size: 3rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#progressInt {
+  font-size: 6rem;
+  color: #ff4769;
+}
+
+#progressDecimal {
+  color: #762236;
+}
+
+#progressPercentSymbol {
+  color: #d3d3d3
 }

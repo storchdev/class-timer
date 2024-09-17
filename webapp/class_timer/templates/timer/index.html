@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}⌛{% endblock %}
+{% block title %}{% endblock %}
 
 {% block nav %}
-<li><span id="test-text">test</span></li>
+<li><span id="testText">test</span></li>
 
-<li id="testtime-container">
+<li id="testTimeContainer">
   <form method="post">
     <input type="datetime-local" id="testtime" name="testtime">
     <button type="submit" id="testtime-button" value="Test Time">Test Time</button>
@@ -20,9 +20,18 @@
 
   <!-- Current and next classes -->
   {% if current_class %}
-  <div id="current-class">
-    <div class="small-header">Current Class</div>
-    <div class="class-name">{{ current_class }}</div>
+  <div id="currentClass">
+    <div class="small-header" id="currentClassSmallHeader">Current Class</div>
+    <div class="class-name" id="currentClassName">{{ current_class }}</div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-text" id="progressText">
+        <span id="progressInt">0</span>
+        <span id="progressDecimal">.0</span>
+        <span id="progressPercentSymbol">%</span>
+    </div>
+    <div class="progress-bar" id="progressBar"></div>
   </div>
   {% endif %}
 
@@ -30,21 +39,21 @@
   <!-- Timer display -->
   <div id="timer">
     {% if end_time %}
-    <div id="time-remaining">
-      <div class="small-header">Time Remaining</div>
-      <div id="remaining-timer-ticking" class="timer-ticking">0h 0m 0s</div>
+    <div id="timeRemaining">
+      <div class="small-header" id="timeRemainingSmallHeader">Time Remaining</div>
+      <div class="timer-ticking" id="remainingTimerTicking">0h 0m 0s</div>
     </div>
     {% endif %}
 
-    <div id="current-time">
-      <div class="small-header">Current Time</div>
-      <div id="current-timer-ticking" class="timer-ticking">00:00</div>
+    <div id="currentTime">
+      <div class="small-header" id="currentTimeSmallHeader">Current Time</div>
+      <div id="currentTimerTicking" class="timer-ticking">00:00</div>
     </div>
 
     {% if start_time %}
-    <div id="time-elapsed">
-      <div class="small-header">Time Elapsed</div>
-      <div id="elapsed-timer-ticking" class="timer-ticking">0h 0m 0s</div>
+    <div id="timeElapsed">
+      <div class="small-header" id="timeElapsedSmallHeader">Time Elapsed</div>
+      <div id="elapsedTimerTicking" class="timer-ticking">0h 0m 0s</div>
     </div>
     {% endif %}
   </div>
@@ -52,9 +61,10 @@
 
   {% if next_class %}
   <hr>
-  <div id="next-class">
-    <div class="small-header">Next Class</div>
-    <div class="class-name">{{ next_class }}</div>
+
+  <div id="nextClass">
+    <div class="small-header" id="nextClassSmallHeader">Next Class</div>
+    <div class="class-name" id="nextClassName">{{ next_class }}</div>
   </div>
   {% endif %}
 
@@ -63,12 +73,12 @@
 
   <div id="messages">
     <!-- Main message-->
-    <div id="main-message">
+    <div id="mainMessage">
       <p id="p-main-message"></p>
     </div>
 
     <!-- Special messages will be displayed here -->
-    <div id="special-message">
+    <div id="specialMessage">
       <p id="p-special-message"></p>
     </div>
   </div>
@@ -98,5 +108,7 @@
 
 </script>
 <script src="{{ url_for ('static', filename='timer.js') }}"></script>
+<script src="{{ url_for ('static', filename='hover.js') }}"></script>
+<script src="{{ url_for ('static', filename='wakelock.js') }}"></script>
 <script src="{{ url_for ('static', filename='testtime.js') }}"></script>
 {% endblock %}

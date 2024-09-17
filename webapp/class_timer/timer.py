@@ -94,7 +94,7 @@ def index():
             # dt = datetime(2024, 9, 13, 0, 0)
 
             # During class 
-            dt = datetime(2024, 9, 13, 9, 0)
+            dt = datetime(2024, 9, 13, 8, 28, 1)
 
             # During break
             # dt = datetime(2024, 9, 13, 9, 30, 58)
