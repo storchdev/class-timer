@@ -139,7 +139,7 @@ hr {
   font-size: 4rem;
   /* Larger timer font size */
   font-weight: bold;
-  color: #61afef;
+  color: #86bce8;
   /* width: 50%; */
 }
 
@@ -337,7 +337,7 @@ input[type="submit"]:hover {
 .progress-container {
   margin: 20px;
   width: 90vw;
-  height: 2rem;
+  height: 40px;
   border-radius: 20px;
   border: 2px solid white;
 }

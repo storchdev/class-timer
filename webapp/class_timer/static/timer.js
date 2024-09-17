@@ -96,19 +96,40 @@ function updateTitle() {
   }
 }
 
+
+function getWidthInPixels(element, percent) {
+  // Create a clone of the element
+  const clone = element.cloneNode(true);
+  
+  // Ensure the clone is not displayed
+  clone.style.position = 'absolute';
+  clone.style.visibility = 'hidden';
+  clone.style.width = percent + '%';
+  
+  // Append the clone to the body to get the computed width
+  document.body.appendChild(clone);
+  
+  // Get the width of the cloned element
+  const widthInPixels = clone.offsetWidth;
+  
+  // Remove the clone from the DOM
+  document.body.removeChild(clone);
+  
+  return widthInPixels;
+}
+
+
 function updateProgressBar() {
   if (currentClass !== "None") {
     let rn = getCurrentTime();
-    let percent = (rn - startTime) / (endTime - startTime);
-    let rounded = (percent * 100).toFixed(1);
+    let percent = (rn - startTime) / (endTime - startTime) * 100;
+    let rounded = (percent).toFixed(1);
     let parts = rounded.split('.');
     document.getElementById('progressInt').innerHTML = parts[0]; // Integer part
     document.getElementById('progressDecimal').innerHTML = '.' + parts[1]; // Decimal part
 
-    let container = document.querySelector('.progress-container');
     let bar = document.querySelector('.progress-bar')
-    let displayWidth = Math.max(percent * container.offsetWidth, container.offsetHeight);
-    bar.style.width = displayWidth + 'px';
+    bar.style.width = `clamp(40px,${percent}%,100%)`
   }
 }
 
