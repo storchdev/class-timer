@@ -80,7 +80,7 @@ nav:hover {
 }
 
 nav h1 {
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: normal;
   color: #6d9ef5;
   transition: color 0.5s ease;
@@ -99,7 +99,7 @@ nav ul {
 }
 
 nav li {
-  font-size: 1em;
+  font-size: 1rem;
   padding: 10px 15px;
   transition: color 0.5s ease;
   /* Smooth text color transition */
@@ -136,7 +136,7 @@ hr {
 }
 
 .timer-ticking {
-  font-size: 4em;
+  font-size: 4rem;
   /* Larger timer font size */
   font-weight: bold;
   color: #61afef;
@@ -144,7 +144,7 @@ hr {
 }
 
 #currentTimerTicking {
-  font-size: 3em;
+  font-size: 3rem;
   font-weight: normal;
   color: #98c379;
 }
@@ -167,7 +167,7 @@ hr {
 } */
 
 .small-header {
-  font-size: 1em;
+  font-size: 1rem;
   color: rgba(200, 200, 200, 0.6);
   font-family: 'Quicksand', sans-serif;
   text-align: center;
@@ -175,7 +175,7 @@ hr {
 }
 
 .class-name {
-  font-size: 3em;
+  font-size: 3rem;
   font-weight: bold;
   color: #f5f5f5;
 }
@@ -186,7 +186,7 @@ hr {
 #messages p {
   font-family: 'Quicksand', sans-serif;
   display: block;
-  font-size: 1.5em;
+  font-size: 1.5rem;
   text-align: center;
   max-width: 80%;
   padding: 10px;
@@ -245,7 +245,7 @@ form {
 }
 
 label {
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 input[type="text"],
@@ -253,7 +253,7 @@ input[type="username"],
 input[type="password"],
 input[type="submit"] {
   padding: 10px;
-  font-size: 1.2em;
+  font-size: 1.2rem;
   border: 2px solid #3a3a54;
   border-radius: 5px;
   background-color: #1e1e2e;
@@ -304,7 +304,7 @@ input[type="submit"]:hover {
   }
 
   #timer p {
-    font-size: 2.5em;
+    font-size: 2.5rem;
   }
 }
 
@@ -337,11 +337,9 @@ input[type="submit"]:hover {
 .progress-container {
   margin: 20px;
   width: 90vw;
-  height: 2em;
+  height: 2rem;
   border-radius: 20px;
   border: 2px solid white;
-  display: flex;
-  box-sizing: border-box;
 }
 
 .progress-bar {
@@ -356,9 +354,9 @@ input[type="submit"]:hover {
 .progress-text {
   position: absolute;
   right: 20px;
+  top: 0px;
   font-size: 0px;
   font-weight: bold;
-  top: -20px;
 }
 
 .progress-text span {
