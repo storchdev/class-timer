@@ -360,13 +360,13 @@ input[type="submit"]:hover {
 }
 
 .progress-text span {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-family: 'Courier New', Courier, monospace;
   color: #ff4769;
 }
 
 #progressInt {
-  font-size: 6rem;
+  font-size: 5rem;
 }
 
 #progressPercentSymbol {
